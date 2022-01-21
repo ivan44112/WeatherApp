@@ -1,68 +1,64 @@
 <template>
-  <div class="login-page">
-    <div class="section-top">
-      <div class="logo-container">
-        <div class="logo-title">Weatherify</div>
+  <div className="login-page">
+    <div className="section-top">
+      <div className="logo-container">
+        <div className="logo-title">Weatherify</div>
       </div>
     </div>
-    <div class="content">
-      <section class="forms-section">
-        <div class="form-container">
-          <div class="form">
-            <div class="sign-in-section">
-              <span class="sign-in">Sign in</span>
+    <div className="content">
+      <section className="forms-section">
+        <div className="form-container">
+          <div className="form">
+            <div className="sign-in-section">
+              <span className="sign-in">Sign in</span>
             </div>
-            <div class="input-section">
-              <form >
-                <label for="email"></label>
+            <div className="input-section">
+              <form @submit.prevent="login">
+                <label htmlFor="email"></label>
                 <input type="email" v-model="email" id="email" name="email" placeholder="Email" required>
-                <label for="password"></label>
+                <label htmlFor="password"></label>
                 <input type="password" v-model="password" id="password" name="password" placeholder="Password" required>
-                <span class="password-validation" v-if="!this.passwordValidator.test(this.password)">Password must include eight characters, 1 uppercase letter, 1 number and 1 special character</span>
-                <button class="submit" type="submit" @click="login">Log In</button>
+                <span className="password-validation" v-if="!passwordValidator.test(password)">Password must include eight
+                  characters, 1 uppercase letter, 1 number and 1 special character</span>
+                <button className="submit" type="submit">Log In</button>
               </form>
             </div>
           </div>
         </div>
       </section>
-      <section class="container-reducer">
+      <section className="container-reducer">
       </section>
     </div>
   </div>
 </template>
 
-<script >
+<script lang="ts">
 
 
-import router from "@/router";
+import {defineComponent} from 'vue'
 
-export default {
-  name: "Login",
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
+export default defineComponent({
+  name: 'Login',
   data() {
     return {
       email: '',
       password: '',
       passwordValidationMessage: true,
       passwordValidator: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      date: new Date()
-    };
+      date: new Date(),
+    }
   },
   methods: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    login: function () {
-      const storedEmail = JSON.stringify(this.email);
-      const storedDate = JSON.stringify(this.date);
+    login() {
       if (this.passwordValidator.test(this.password)) {
-        localStorage.setItem('date', storedDate);
-        localStorage.setItem('email', storedEmail);
-        router.push('/dashboard/weather');
-        console.log(this.password)
+        localStorage.setItem('X-token', this.email + ' ' + this.date)
+        this.$router.push('/dashboard/weather')
       }
     },
-  }
+  },
 
-}
+})
 </script>
 
 <style scoped>
@@ -100,7 +96,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 28%;
+  margin-left: 3rem;
 }
 
 .password-validation {
@@ -116,7 +112,7 @@ export default {
 }
 
 
-.sign-in{
+.sign-in {
   color: #0F3B58;
   font-weight: bold;
   font-size: 30px;
@@ -158,7 +154,6 @@ export default {
 }
 
 
-
 .input-section input {
   color: #797979;
   display: block;
@@ -176,15 +171,14 @@ export default {
 }
 
 #email {
+  margin-bottom: 2rem;
   font-size: 22px;
-  padding-top: 30px;
   outline: none;
   background-color: white;
 }
 
 #password {
   font-size: 22px;
-  padding-top: 30px;
   outline: none;
   background-color: white;
 }

@@ -6,14 +6,16 @@
   </li>
 </template>
 
-<script>
-export default {
-  name: "NavigationItem",
+<script lang="ts">
+import {defineComponent} from 'vue'
+
+export default defineComponent({
+  name: 'NavigationItem',
   props: {
     text: String,
-    to: String
-  }
-}
+    to: String,
+  },
+})
 </script>
 
 <style scoped>

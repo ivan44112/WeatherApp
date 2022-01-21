@@ -3,14 +3,18 @@
     <div class="section-top">
       <span class="header-title">Weatherify</span>
       <div class="header-right">
-        <button class="logout-button" @click="logout">Logout</button>
+        <button class="logout-button" @click="logout">Logout <i style="margin-left: 1rem"
+                                                                class="fas fa-sign-out-alt"></i></button>
       </div>
     </div>
     <div class="main-container">
       <nav class="section-left">
         <ul class="menu-items">
           <NavigationItem
-              v-for="navigationItem in navigationItems" :key="navigationItem.text" :text="navigationItem.text" :to="navigationItem.to"
+              v-for="navigationItem in navigationItems"
+              :key="navigationItem.text"
+              :text="navigationItem.text"
+              :to="navigationItem.to"
           />
         </ul>
       </nav>
@@ -20,29 +24,38 @@
 
 </template>
 
-<script>
-import NavigationItem from "@/components/NavigationItem";
-export default {
-  name: "Dashboard",
+<script lang="ts">
+import NavigationItem from '@/components/NavigationItem.vue'
+import {defineComponent} from 'vue'
+
+export default defineComponent({
+  name: 'Dashboard',
   components: {
-    NavigationItem
+    NavigationItem,
   },
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
   data() {
     return {
-      navigationItems: [{text: 'Weather', to: '/dashboard/weather'},
-        {text: 'Favorites', to:'/dashboard/favorite-city'}]
+      navigationItems: [
+        {text: 'Weather', to: '/dashboard/weather'},
+        {text: 'Favorites', to: '/dashboard/favorite-city'},
+      ],
     }
   },
   methods: {
     logout: function () {
-      localStorage.removeItem('email');
-      localStorage.removeItem('date');
+      localStorage.removeItem('X-token')
       this.$router.push('/')
+    },
+  },
+  beforeRouteEnter(to, from, next) {
+    if (localStorage.getItem('X-token')) {
+      console.log('moze dalje')
+      next()
     }
-  }
+  },
 
-}
+})
 </script>
 
 <style scoped>
@@ -76,6 +89,10 @@ export default {
   background-color: #1A669A;
   color: white;
   font-size: 22px;
+}
+
+.logout-button:hover {
+  color: #35a3e3;
 }
 
 .main-container {
