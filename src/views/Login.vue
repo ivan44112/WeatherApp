@@ -1,32 +1,32 @@
 <template>
-  <div className="login-page">
-    <div className="section-top">
-      <div className="logo-container">
-        <div className="logo-title">Weatherify</div>
+  <div class="login-page">
+    <div class="section-top">
+      <div class="logo-container">
+        <div class="logo-title">Weatherify</div>
       </div>
     </div>
-    <div className="content">
-      <section className="forms-section">
-        <div className="form-container">
-          <div className="form">
-            <div className="sign-in-section">
-              <span className="sign-in">Sign in</span>
+    <div class="content">
+      <section class="forms-section">
+        <div class="form-container">
+          <div class="form">
+            <div class="sign-in-section">
+              <span class="sign-in">Sign in</span>
             </div>
-            <div className="input-section">
+            <div class="input-section">
               <form @submit.prevent="login">
-                <label htmlFor="email"></label>
+                <label for="email"></label>
                 <input type="email" v-model="email" id="email" name="email" placeholder="Email" required>
-                <label htmlFor="password"></label>
+                <label for="password"></label>
                 <input type="password" v-model="password" id="password" name="password" placeholder="Password" required>
-                <span className="password-validation" v-if="!passwordValidator.test(password)">Password must include eight
+                <span class="password-validation" v-if="!passwordValidator.test(password)">Password must include eight
                   characters, 1 uppercase letter, 1 number and 1 special character</span>
-                <button className="submit" type="submit">Log In</button>
+                <button class="submit" type="submit">Log In</button>
               </form>
             </div>
           </div>
         </div>
       </section>
-      <section className="container-reducer">
+      <section class="container-reducer">
       </section>
     </div>
   </div>
