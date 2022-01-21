@@ -50,7 +50,6 @@ export default defineComponent({
   },
   beforeRouteEnter(to, from, next) {
     if (localStorage.getItem('X-token')) {
-      console.log('moze dalje')
       next()
     }
   },

@@ -65,20 +65,16 @@ export default defineComponent({
               }
               this.days.push(fetchedDailyWeatherData)
             }
-
-            console.log(this.days)
-            console.log(response.data)
           })
 
         },
         navigateToSelectedDay(lat: number, lon: number, dt: number) {
           this.$router.push({path: `/weather/cityName/${dt}`, query: {lat, lon}})
-          console.log(this.$route.query, 'parami ovdje')
+
         }
       },
       mounted() {
         this.fetchWeatherForDailyForecast()
-        console.log(this.$route)
       },
     },
 ) </script>

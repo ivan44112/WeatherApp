@@ -60,7 +60,7 @@ export default defineComponent({
           }
           this.weatherForSelectedDays.push(fetchedWeatherForSelectedDay)
         }
-        console.log(response.data.hourly[1].weather[0].icon, 'ovo je response za zadnji zadatak')
+
       })
     },
   },

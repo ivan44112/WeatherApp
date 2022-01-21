@@ -83,13 +83,10 @@ export default defineComponent({
               longitude: response.data.coord.lon,
             }
             this.cities.push(fetchedWeather)
-            console.log(this.cities, 'ovdje su gradovi')
-            console.log(response.data)
           })
         },
         selectedCityDailyWeather(lat: number, lon: number, cityName: string) {
           this.$router.push({path: `/weather/${cityName}`, query: {lat, lon}})
-          console.log(this.$route.params, 'parami ovdje')
 
         },
         deleteCity(index: number) {
