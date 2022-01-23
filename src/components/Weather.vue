@@ -154,13 +154,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.fade-leave-active {
-  transition: all 0.5s;
-}
-
-.fade-leave-to {
-  opacity: 0;
-}
 
 span {
   margin-left: 0.5rem;
@@ -215,7 +208,7 @@ p {
 
 .city-navigation:hover {
   cursor: pointer;
-  background-position: right center; /* change the direction of the change here */
+  background-position: right center;
   color: #fff;
   text-decoration: none;
 }
@@ -249,7 +242,7 @@ p {
 
 .delete-city:hover {
   cursor: pointer;
-  background-position: right center; /* change the direction of the change here */
+  background-position: right center;
   color: #fff;
   text-decoration: none;
 }
@@ -283,7 +276,7 @@ p {
 
 .favorite-city:hover {
   cursor: pointer;
-  background-position: right center; /* change the direction of the change here */
+  background-position: right center;
   color: #fff;
   text-decoration: none;
 }
