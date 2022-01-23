@@ -1,21 +1,22 @@
 <template>
   <li class="menu-items">
     <router-link class="items" :to="to">
-      {{ text }}
+      <i :class="`${icon}`"></i> {{ text }}
     </router-link>
   </li>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'NavigationItem',
+  name: "NavigationItem",
   props: {
     text: String,
+    icon: String,
     to: String,
   },
-})
+});
 </script>
 
 <style scoped>

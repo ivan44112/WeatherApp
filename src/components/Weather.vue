@@ -1,78 +1,112 @@
 <template>
-  <div class="searchBox" v-if="cities.length === 10 ? !showSearch : showSearch">
-    <input class="searchInput" type="text" name="" v-model="searchTermForCities" placeholder="Search and add cities"
-           @keyup.enter="fetchWeatherForCities">
-    <button class="searchButton" v-if="cities.length === 10 ? !buttonDisabled : buttonDisabled"
-            @click="fetchWeatherForCities">
+  <div class="searchBox">
+    <input
+        v-if="cities.length === 10 ? !showSearch : showSearch"
+        class="searchInput"
+        type="text"
+        name=""
+        v-model="searchTermForCities"
+        placeholder="Search and add cities"
+        @keyup.enter="fetchWeatherForCities"
+    />
+    <button
+        class="searchButton"
+        v-if="cities.length === 10 ? !buttonDisabled : buttonDisabled"
+        @click="fetchWeatherForCities"
+    >
       <i class="fas fa-search"></i>
     </button>
+    <p class="validation-message" v-if="cities.length === 10">
+      Maximum amount reached, delete some to add more.
+    </p>
   </div>
-  <BaseCard v-for="(city, index) in cities" :key="city.name">
-    <div class="city-display">
-      <p>City name:<span class="city-navigation"
-                         @click="selectedCityDailyWeather(city.latitude, city.longitude, city.name)">{{
-          city.name
-        }}</span>
+  <transition-group name="fade">
+    <BaseCard v-for="(city, index) in cities" :key="city.name">
+      <p
+          class="city-navigation"
+          @click="
+          selectedCityDailyWeather(city.latitude, city.longitude, city.name)
+        "
+      >
+        <span>{{ city.name }}</span>
+        <i class="fas fa-location-arrow"></i>
       </p>
-      <p>Visibility:<span>{{ city.visibility }} metres</span></p>
-      <p>Description:<span>{{
-          city.descriptionOfWeather.charAt(0).toUpperCase() + city.descriptionOfWeather.slice(1)
-        }} </span></p>
-      <p>Temp:<span>{{ Math.round(city.temperature) }}°C</span></p>
-      <p class="image-container"><span> <img v-bind:src="`http://openweathermap.org/img/wn/${city.weatherIcon}.png` "
-                                             alt=""/>
-      </span></p>
-      <p>Delete city <span style="cursor: pointer"><i class="fas fa-trash" style="color: red"
-                                                      @click="deleteCity(index)"></i>
-</span></p>
-      <p>Add to favorites<span style="cursor: pointer"><i class="fas fa-heart" style="color: dodgerblue"
-                                                          @click="addCityToFavorite(city)"></i>
-</span></p>
-    </div>
-  </BaseCard>
-
-
+      <p>
+        Visibility:<span>{{ city.visibility }} metres</span>
+      </p>
+      <p>
+        Description:<span
+      >{{
+          city.descriptionOfWeather.charAt(0).toUpperCase() +
+          city.descriptionOfWeather.slice(1)
+        }}
+        </span>
+      </p>
+      <p>
+        Temp:<span>{{ Math.round(city.temperature) }}°C</span>
+      </p>
+      <p class="image-container">
+        <span>
+          <img
+              v-bind:src="`http://openweathermap.org/img/wn/${city.weatherIcon}.png`"
+              alt=""
+          />
+        </span>
+      </p>
+      <p @click="deleteCity(index)" class="delete-city">
+        Delete city
+        <span><i class="fas fa-trash"></i> </span>
+      </p>
+      <p @click="addCityToFavorite(city)" class="favorite-city">
+        Favorite<span
+      ><i class="fas fa-heart" style="margin-left: 24px"></i>
+        </span>
+      </p>
+    </BaseCard>
+  </transition-group>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue'
-import axios from 'axios'
+import { defineComponent } from "vue";
+import axios from "axios";
 import BaseCard from "@/ui/BaseCard.vue";
-
 
 interface WeatherForCities {
   name: string;
-  visibility: number,
-  temperature: number,
-  descriptionOfWeather: string,
-  weatherIcon: string,
-  latitude: number,
-  longitude: number
+  visibility: number;
+  temperature: number;
+  descriptionOfWeather: string;
+  weatherIcon: string;
+  latitude: number;
+  longitude: number;
 }
 
 export default defineComponent({
-      name: 'Weather',
-      components: {
-        BaseCard,
-      },
-      data() {
-        return {
-          APIkey: 'ff1c72c6fa36d43e129658048b0e384d' as string,
-          searchTermForCities: '' as string,
-          cities: [] as Array<WeatherForCities>,
-          buttonDisabled: true as boolean,
-          showSearch: true as boolean
-        }
-      },
-      methods: {
-        fetchWeatherForCities() {
-          axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
+  name: "Weather",
+  components: {
+    BaseCard,
+  },
+  data() {
+    return {
+      APIkey: "ff1c72c6fa36d43e129658048b0e384d" as string,
+      searchTermForCities: "" as string,
+      cities: [] as Array<WeatherForCities>,
+      buttonDisabled: true as boolean,
+      showSearch: true as boolean,
+      validationErrorMessage: "" as string,
+    };
+  },
+  methods: {
+    fetchWeatherForCities() {
+      axios
+          .get(`https://api.openweathermap.org/data/2.5/weather`, {
             params: {
               q: this.searchTermForCities,
               appid: this.APIkey,
-              units: 'metric',
+              units: "metric",
             },
-          }).then((response) => {
+          })
+          .then((response) => {
             const fetchedWeather = {
               name: response.data.name,
               visibility: response.data.visibility,
@@ -81,34 +115,51 @@ export default defineComponent({
               weatherIcon: response.data.weather[0].icon,
               latitude: response.data.coord.lat,
               longitude: response.data.coord.lon,
-            }
-            this.cities.push(fetchedWeather)
-          })
-        },
-        selectedCityDailyWeather(lat: number, lon: number, cityName: string) {
-          this.$router.push({path: `/weather/${cityName}`, query: {lat, lon}})
-
-        },
-        deleteCity(index: number) {
-          this.cities.splice(index, 1)
-        },
-        addCityToFavorite(city: Array<WeatherForCities>) {
-          const storedCities = JSON.parse(localStorage.getItem('city') || '[]')
-          storedCities.push(city)
-          localStorage.setItem('city', JSON.stringify(storedCities))
-          alert('City added to favorites')
-        }
-      },
-
+            };
+            this.cities.push(fetchedWeather);
+            const storedCities = JSON.parse(
+                localStorage.getItem("searchedCity") || "[]"
+            );
+            storedCities.push(fetchedWeather);
+            localStorage.setItem("searchedCity", JSON.stringify(storedCities));
+            this.searchTermForCities = "";
+          });
+    },
+    selectedCityDailyWeather(lat: number, lon: number, cityName: string) {
+      this.$router.push({ path: `/weather/${cityName}`, query: { lat, lon } });
+    },
+    deleteCity(index: number) {
+      this.cities.splice(index, 1);
+      localStorage.setItem("searchedCity", JSON.stringify(this.cities));
+    },
+    addCityToFavorite(city: Array<WeatherForCities>) {
+      const storedCities = JSON.parse(localStorage.getItem("city") || "[]");
+      if (storedCities.length < 10) {
+        storedCities.push(city);
+        localStorage.setItem("city", JSON.stringify(storedCities));
+        alert("City added to favorites");
+      } else {
+        alert("Maximum amount of favorite cities added")
+      }
 
     },
-) </script>
+  },
+  mounted() {
+    const retrievedSearchedCity = localStorage.getItem("searchedCity");
+    this.cities = JSON.parse(
+        retrievedSearchedCity || "[]"
+    ) as Array<WeatherForCities>;
+  },
+});
+</script>
 
 <style scoped>
+.fade-leave-active {
+  transition: all 0.5s;
+}
 
-.city-display {
-  display: flex;
-  flex-direction: column;
+.fade-leave-to {
+  opacity: 0;
 }
 
 span {
@@ -120,16 +171,121 @@ span {
 p {
   font-size: 18px;
   font-weight: bold;
+  transition: all 0.6s ease-out;
 }
-
 
 .image-container {
   margin: 0;
 }
 
+.city-navigation {
+  background-image: linear-gradient(
+      to right,
+      #b36206 0%,
+      #d2d885 51%,
+      #b16003 100%
+  );
+}
+
+.validation-message {
+  color: rgb(179, 0, 0);
+  font-family: CoinbaseSans, -apple-system, BlinkMacSystemFont, "Segoe UI",
+  Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+  "Helvetica Neue", sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.city-navigation {
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.city-navigation > span {
+  margin-right: 1rem;
+}
+
 .city-navigation:hover {
-  color: #35a3e3;
   cursor: pointer;
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.delete-city {
+  background-image: linear-gradient(
+      to right,
+      #780808 0%,
+      #e97982 51%,
+      #780808 100%
+  );
+}
+
+.delete-city {
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: normal;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.delete-city > span {
+  margin-right: 1rem;
+}
+
+.delete-city:hover {
+  cursor: pointer;
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.favorite-city {
+  background-image: linear-gradient(
+      to right,
+      #00a4fc 0%,
+      #85d8ce 51%,
+      #00a6ff 100%
+  );
+}
+
+.favorite-city {
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: normal;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.favorite-city > span {
+  margin-right: 1rem;
+}
+
+.favorite-city:hover {
+  cursor: pointer;
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
 }
 
 button {
@@ -139,13 +295,12 @@ button {
 .searchBox {
   position: absolute;
   top: 6%;
-  left: 18.5%;
+  left: 22%;
   transform: translate(-50%, 50%);
   height: 40px;
-  border: 1px solid #1A669A;
+  border: 1px solid #1a669a;
   border-radius: 40px;
   padding: 10px;
-
 }
 
 .searchBox:hover > .searchInput {
@@ -164,7 +319,7 @@ button {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #1A669A;
+  background: #1a669a;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,7 +331,9 @@ button {
 }
 
 .searchInput {
-  font-family: CoinbaseSans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: CoinbaseSans, -apple-system, BlinkMacSystemFont, "Segoe UI",
+  Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+  "Helvetica Neue", sans-serif;
   font-weight: bold;
   border: none;
   background: none;
@@ -187,7 +344,6 @@ button {
   transition: 0.4s;
   line-height: 40px;
   width: 0;
-
 }
 
 @media screen and (max-width: 620px) {
@@ -196,5 +352,4 @@ button {
     padding: 0 6px;
   }
 }
-
 </style>
