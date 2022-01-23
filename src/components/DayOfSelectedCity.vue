@@ -15,7 +15,7 @@
       <td>{{ weatherForSelectedDay.time }}</td>
       <td>
         <img
-            v-bind:src="`http://openweathermap.org/img/wn/${weatherForSelectedDay.icon}.png`"
+            :src="`http://openweathermap.org/img/wn/${weatherForSelectedDay.icon}.png`"
         />
       </td>
       <td>{{ weatherForSelectedDay.expectedTemperature }} °C</td>
@@ -103,7 +103,6 @@ export default defineComponent({
 table {
   width: 750px;
   border-collapse: collapse;
-  /* border: 3px solid #44475c; */
   margin: 12px 10px 0 28px;
   box-shadow: 0 2px 8px rgba(0.26, 0.26, 0.26, 0.26);
   animation: append-animate 0.3s linear;

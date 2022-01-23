@@ -48,7 +48,7 @@
       <p class="image-container">
         <span>
           <img
-              v-bind:src="`http://openweathermap.org/img/wn/${city.weatherIcon}.png`"
+              :src="`http://openweathermap.org/img/wn/${city.weatherIcon}.png`"
               alt=""
           />
         </span>

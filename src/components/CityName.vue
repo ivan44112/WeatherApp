@@ -14,7 +14,7 @@
         <p>
           <span
           ><img
-              v-bind:src="`http://openweathermap.org/img/wn/${day.icon}.png`"
+              :src="`http://openweathermap.org/img/wn/${day.icon}.png`"
           /></span>
         </p>
         <p>
