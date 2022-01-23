@@ -89,13 +89,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.fade-leave-active {
-  transition: all 0.5s;
-}
 
-.fade-leave-to {
-  opacity: 0;
-}
 .card-container {
   margin-top: 2rem;
   height: 24rem;
